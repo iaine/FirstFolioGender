@@ -2,6 +2,7 @@
 *  Hack for the Speaker vs ON Stage using Midsummer Night's Dream
 */
 FS f;
+Exception e;
 
 SinOsc s1 => dac.left;
 SinOsc s2 => Pan2 p => dac.right;
@@ -10,17 +11,24 @@ SinOsc s2 => Pan2 p => dac.right;
 *  Original takes the integer data file from the transform
 */
 me.arg(0) => string original;
+if (!original) {
+   e.createMessage("No file is given");
+}
 
-//initialise matrix
-string texta[2000];
+// initialise matrix
+string texta[1869];
 
 f.readInts(original, 1868) @=> texta;
 
-//to do, get the 
+// initialise the accumulator
 0 => int accum;
+
+// Assumption that there is a max of 10 character elements
 int chars[10];
+
+// iterate over the array 
 for( 1 => int i; i < 1868; i++ ) {
-   get_extension(texta[i], chars, accum);
+   convert_to_array(texta[i], chars, accum);
    /** Play the speaker on the left channel */
    play_spk(s1, chars[1]);
    /**
@@ -56,7 +64,7 @@ fun void play_char(SinOsc sr, int noteone) {
 /**
 *  Convert the strings into an array
 */
-fun int[] get_extension (string filename, int a[], int accum)
+fun int[] convert_to_array (string filename, int a[], int accum)
 {
     filename.find(",") => int extPos;
     // test needs to have the boundary at 0 and one with out
