@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#Define the file that we want to transform
+FILE=$1
+#Write the file to the text
+echo $FILE >> text.txt
+#Give it  a date so that we can identify what data is used
+NOW=$(date +%Y-%m-%d)
+
+#Path to the sonification tool kit
+# https://github.com/iaine/sonification
+TOOL=
+
 #Check some configurations
 function check_cfg() {
   if [ ! -z $1 ]; do
@@ -8,18 +19,15 @@ function check_cfg() {
   done
 }
 
+function clean() {
+  rm *.txt
+}
+
 check_cfg php
 check_cfg chuck
 
-#Define the file that we want to transform
-FILE=$1
-#Write the file to the text
-echo $FILE >> text.txt
-#Give it  a date so that we can identify what data is used
-NOW=$(date +%Y-%m-%d)
-
 #Clean out the out intermediate file
-rm *.txt
+clean
 
 #Transform the given file into data
 php xml_transform.php  $FILE
