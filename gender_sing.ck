@@ -27,7 +27,8 @@ for( 1 => int i; i < 1868; i++ ) {
    *  Play the second channel for the characters.
    */
    for (2 => int k; k<(chars.size() -2); k++) {
-      spork ~ play_char(s2, (70+chars[k]), p);
+      // making the data audible
+      play_char(s2, (70+chars[k]), p);
    }
 }
 
@@ -46,8 +47,7 @@ fun void play_spk(SinOsc s, int noteone) {
 * Function to play the character. 
 * Assign it to the Sine Oscillator
 */
-fun void play_char(SinOsc sr, int noteone, pan2 p) {
-    Math.random2f( -1, 1 ) => p.pan;
+fun void play_char(SinOsc sr, int noteone) {
     Std.mtof( noteone ) => sr.freq;
     100::ms => now;
     0 => sr.freq;
