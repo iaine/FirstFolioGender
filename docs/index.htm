@@ -15,7 +15,7 @@
       var w = 400;
 var h = 400;
 var r = h/2;
-var color = d3.scale.category20c();
+var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var data = [{"label":"Category A", "value":20}, 
 		          {"label":"Category B", "value":50}, 
