@@ -9,7 +9,7 @@ NOW=$(date +%Y-%m-%d)
 
 #Path to the sonification tool kit
 # https://github.com/iaine/sonification
-TOOL=
+TOOL="~/git/sonification/src"
 
 #Check some configurations
 function check_cfg() {
