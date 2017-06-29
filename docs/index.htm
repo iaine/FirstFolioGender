@@ -58,7 +58,12 @@ var yPos = Math.floor(HEIGHT/2);
 * Create Note class
 */
  _old = 0;
-Note.prototype.start = function() {
+ var Note = (function(audioCtx) {
+    function Note(frequency){
+      this.frequency = 60 + frequency;
+      this.note_length = 1 * frequency;
+    }	    
+    Note.prototype.start = function() {
 
     // set up the panner and listener objects
     var listener = audioCtx.listener;
