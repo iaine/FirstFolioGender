@@ -80,7 +80,7 @@ var yPos = Math.floor(HEIGHT/2);
     _old = _old++;
     };
 
-    //return Note;
+    return Note;
   })(audioCtx);
 /**
 *  Function to use Web Audio to playsound
@@ -88,7 +88,7 @@ var yPos = Math.floor(HEIGHT/2);
 function playSound(data) {
     for (var d in data) {
 	 //play notes at the same time
-         note = Note(data[d]);
+         note = new Note(data[d]);
          note.start(); 
     }
 }
