@@ -132,7 +132,8 @@ function playSound(data) {
 *  Function to use Web Audio to play Lines
 */
 function playLines() {
-    for (var d in data) {
+	data = [{"":17},{"":71,"M":127,"F":99},{"M":211,"":42,"F":172},{"M":348,"F":227,"":7},{"F":31,"M":118,"":51},{"":114,"M":226,"F":26}];
+    for (var d in data) {i
 	 //play notes at the same time
          note = new aNote(data[d]);
          note.start(); 
