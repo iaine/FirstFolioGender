@@ -61,7 +61,7 @@ var yPos = Math.floor(HEIGHT/2);
  var Note = (function(audioCtx) {
     function Note(frequency){
       this.frequency = 60 + frequency;
-      this.note_length = 1;
+      this.note_length = 10;
 	    console.log("Freq: " + this.frequency + " length:" + this.note_length);
     }	    
     Note.prototype.start = function() {
