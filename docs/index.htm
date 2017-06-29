@@ -98,7 +98,47 @@ function playSound(data) {
     <p> This a visualisation of the counts of lines spoken by marked up genders by act in a Midsummer Night's Dream. <br />
     A sonification can be heard by clicking on the sonification button.</p>
      <button type="button">Listen to the Data</button>
-     <div id="chart"> </div>
+     <div id="chart" onclick="playLines()"> </div>
+	  <script type="application/javascript">
+/**
+* Create Note class
+*/
+ _old = 0;
+ var aNote = (function(audioCtx) {
+    function aNote(frequency){
+      this.frequency = 60 + frequency;
+      this.note_length = 1 * frequency;
+    }	    
+    aNote.prototype.start = function() {
+
+    // set up the panner and listener objects
+    var listener = audioCtx.listener;
+    //set up a static listener
+    listener.setOrientation(0,0,-1,0,1,0);
+    listener.setPosition(xPos,yPos,300);
+
+    var oscillator = audioCtx.createOscillator();
+    oscillator.type = "sine";
+    oscillator.frequency.value = this.frequency; // value in hertz
+    oscillator.start(_old);
+    oscillator.stop(_old + this.note_length);
+    oscillator.connect(audioCtx.destination);
+    _old = _old++;
+    };
+
+    return aNote;
+  })(audioCtx);
+/**
+*  Function to use Web Audio to play Lines
+*/
+function playLines() {
+    for (var d in data) {
+	 //play notes at the same time
+         note = new aNote(data[d]);
+         note.start(); 
+    }
+}		  
+	  </script>
   </div>
 </article>
 </body>
