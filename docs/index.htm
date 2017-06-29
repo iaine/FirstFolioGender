@@ -61,8 +61,8 @@ var yPos = Math.floor(HEIGHT/2);
  var Note = (function(audioCtx) {
     function Note(frequency){
       this.frequency = 60 + frequency;
-      this.note_length = 10;
-	    console.log("Freq: " + this.frequency + " length:" + this.note_length);
+      this.note_length = 1;
+	    console.log("Freq: " + this.frequency + " length:" + this.note_length + " pos " + _old);
     }	    
     Note.prototype.start = function() {
 
@@ -78,7 +78,7 @@ var yPos = Math.floor(HEIGHT/2);
     oscillator.start(_old);
     oscillator.stop(_old + this.note_length);
     oscillator.connect(audioCtx.destination);
-    _old = _old++;
+    _old++;
     };
 
     return Note;
