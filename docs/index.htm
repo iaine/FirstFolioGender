@@ -40,15 +40,11 @@ arcs.append("svg:path")
         return arc(d);
     });
 
-    });
-
 // add the text
 arcs.append("svg:text").attr("transform", function(d){
 			d.innerRadius = 0;
 			d.outerRadius = r;
-    return "translate(" + arc.centroid(d) + ")";}).attr("text-anchor", "middle").text(function(d, i) {
-    return data[i].label;}
-		);
+    return "translate(" + arc.centroid(d) + ")";}).attr("text-anchor", "middl
     </script>
   </div>
   <div id="act">
