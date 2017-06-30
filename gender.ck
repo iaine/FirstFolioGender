@@ -2,10 +2,6 @@
 *  Hack for the Speaker vs ON Stage using Midsummer Night's Dream
 */
 FS f;
-PlayFactory pf;
-
-/*SinOsc s1 => dac.left;
-SinOsc s2 => Pan2 p => dac.right;*/
 
 /**
 *  Original takes the integer data file from the transform
@@ -15,43 +11,39 @@ me.arg(0) => string original;
 //initialise matrix
 string texta[2000];
 
-f.readInts(original, 1868) @=> texta;
+f.readString(original, 1868) @=> texta;
 
-//to do, get the 
-0 => int accum;
-int chars[10];
+
+//int chars[10];
+
 for( 1 => int i; i < 1868; i++ ) {
+   int chars[10];
+   0 => int accum;
    get_extension(texta[i], chars, accum);
-   /** Play the speaker on the left channel */
-   pf.createFactory(0, pf.Std(chars[1]), 100, "playchannel" );
-   /**
-   *  Play the second channel for the characters.
-   */
-   for (2 => int k; k<(chars.size() -2); k++) {
-      Math.random2f( -1, 1 ) => int p;
-      #spork ~ play_char(s2, (70+chars[k]), p);
-      pf.createFactory(1, pf.Std(chars[k]), 100, p, "panchannel" );
-   }
+   0 => accum;   
 }
 
 /**
 * Function to play the speaker. 
 * Assign it to the Sine Oscillator
 */
-fun void play_spk(SinOsc s, int noteone) {
+fun void play_spk(string noteone) {
+    SinOsc s1 => dac.left;
+    <<< "speaker: ", noteone >>>;
     // start the first note
-    Std.mtof( noteone )  => s.freq;
+     Std.atoi(noteone)   => s1.freq;
     100::ms => now;
-    0 => s.freq;
+    0 => s1.freq;
 }  
 
 /**
 * Function to play the character. 
 * Assign it to the Sine Oscillator
 */
-fun void play_char(SinOsc sr, int noteone, pan2 p) {
-    Math.random2f( -1, 1 ) => p.pan;
-    Std.mtof( noteone ) => sr.freq;
+fun void play_char(string noteone) {
+    SinOsc sr => dac.right;
+    <<< "character: ", noteone >>>;
+    (Std.atoi(noteone) + 70)  => sr.freq;
     100::ms => now;
     0 => sr.freq;
 }
@@ -59,14 +51,21 @@ fun void play_char(SinOsc sr, int noteone, pan2 p) {
 /**
 *  Convert the strings into an array
 */
-fun int[] get_extension (string filename, int a[], int accum)
+fun int[] get_extension (string filename, int chars[], int accum)
 {
-    filename.find(",") => int extPos;
     // test needs to have the boundary at 0 and one with out
-    if (extPos > -1) {
-       Std.atoi(filename.substring(0,extPos)) => a[accum];
-       get_extension(filename.substring((extPos + 1)), a, (accum + 1));
+    if (filename.find(",") > 0) {
+       filename.find(",") => int extPos;
+       if (accum == 1) {
+           play_spk(filename.substring(0,extPos));
+           1 +=> accum;
+           get_extension(filename.substring((extPos + 1)), chars, accum);
+       } else {
+       play_char(filename.substring(0,extPos));
+       1 +=> accum;
+       get_extension(filename.substring((extPos + 1)), chars, accum);
+      } 
     } else {
-       return a;
+       play_char(filename);
     }
 }
