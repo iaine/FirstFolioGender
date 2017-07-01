@@ -8,7 +8,7 @@ function extract_data ($short) {
   $reader = new XMLReader();
 
   if (!$reader->open($xml_str)) {
-    die("Failed to open First Folio");
+    die("Failed to open First Folio $xml_str");
   }
   $num_items=0;
   $pid = 1;
@@ -46,13 +46,14 @@ function extract_data ($short) {
     //get the character
     if ($reader->nodeType == XMLReader::ELEMENT && ($reader->name == 'l' || $reader->name == 'p')) {
        $num_items++;
-       if (!$person[$speaker]['sex']) {
+       $play .= "$act," . map_sex_markup($person[$speaker]['id'], $person[$speaker]['sex']) .','. join(',',$inner)."\n";
+       /*if (!$person[$speaker]['sex']) {
           $play .= "$act," . (60 + $person[$speaker]['id']) .','. join(',',$inner)."\n";
        } else if ($person[$speaker]['sex'] == 'M') {
           $play .= "$act," . (127 + $person[$speaker]['id']) .','. join(',',$inner)."\n";
        } else {
           $play .= "$act," . (210 + $person[$speaker]['id']) .','. join(',',$inner)."\n";
-       } 
+       } */
     }
 
     // get the types of stage direction
@@ -64,38 +65,33 @@ function extract_data ($short) {
 
            if (strstr($reader->getAttribute('who'),',') !== false) {
                foreach (explode(',',$reader->getAttribute('who')) as $on) {
-                   array_push($inner2, $person[substr($on,1)]['id']);
+                   array_push($inner2, map_sex_markup($person[substr($on,1)]['id'], $person[substr($on,1)]['sex']));
                }
            } else {
-               array_push($inner2, $person[substr($reader->getAttribute('who'),1)]['id']);
+               array_push($inner2, map_sex_markup($person[substr($reader->getAttribute('who'),1)]['id'],$person[substr($reader->getAttribute('who'),1)]['sex'] ));
            }
+           // filter out any null variables
            $inner = array_unique(array_filter($inner2, function($var){return !is_null($var);}));
        } else if ($type == 'exit') {
            $inner2 = $inner;
            // remove the id from the attribute
            if (strstr($reader->getAttribute('who'),',') !== false) {
                foreach (explode(',',$reader->getAttribute('who')) as $on) {
-                   if ($key = array_keys($inner2, $person[substr($on,1)]['id'])) {
+                   if ($key = array_keys($inner2, map_sex_markup($person[substr($on,1)]['id'],$person[substr($on,1)]['sex']))) {
                          foreach($key as $k) {
                            unset($inner2[$k]);
                          }
                    }
                }
            } else {
-               if ($key = array_keys($inner2, $person[substr($on,1)]['id'])) {
+               if ($key = array_keys($inner2, map_sex_markup($person[substr($on,1)]['id'],$person[substr($on,1)]['sex']))) {
                    foreach($key as $k) {
                       unset($inner2[$k]);
                    }
                }
            }
            $inner = array_unique(array_filter($inner2, function($var){return !is_null($var);}));
-       }/* else if ($type == 'setting') {
-         $play .= "43 ";
-       } else if ($type == 'business') {
-         $play .= "44 ";
-       } else {
-         $play .= "45 ";
-       }*/
+       }
     }
   }
   $num_items++;
@@ -107,6 +103,16 @@ function extract_data ($short) {
   $reader->close();
   
   return $play;
+}
+
+function map_sex_markup($id, $sex) {
+    if ($sex == '') {
+        return (60 + $id);
+    } else if ($sex == 'M') {
+        return (127 + $id);
+    } else {
+        return (210 + $id);
+    }
 }
 
 function open_file($code) {
