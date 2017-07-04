@@ -88,10 +88,11 @@ foreach ($count[0] as $actV => $speak) {
         $_tmp .= '"'.$gender .'" :'. $freq .',';
     }
     $json .= substr($json, 0, -1) .'},';
+    $_tmp = '';
 }
 $json = substr($json, 0, -1) . "]}";
-write_file($json, "mnd_gender.json");
+write_file($json, "docs/mnd_gender.json");
 
 
-write_file("{ \"data\":". json_encode($count[1]) . "}", "mnd_quant.json");
+write_file("{ \"data\":". json_encode($count[1]) . "}", "docs/mnd_quant.json");
 ?>
