@@ -60,7 +60,13 @@ var yPos = Math.floor(HEIGHT/2);
  _old = 0;
  var Note = (function(audioCtx) {
     function Note(frequency){
+	    if (_old == 0) {
       this.frequency = 60 + frequency;
+	    } else if (_old == 1){
+		 this.frequency = 120 + frequency;   
+	    } else {
+		this.frequency = 210 + frequency;    
+	    }
       this.note_length = 3;
 	    console.log("Freq: " + this.frequency + " length:" + this.note_length + " pos " + _old);
     }	    
@@ -87,9 +93,10 @@ var yPos = Math.floor(HEIGHT/2);
 *  Function to use Web Audio to playsound
 */
 function playSound(data) {
+
     for (var d in data) {
 	 //play notes at the same time
-         note = new Note(data[d]);
+         note = new Note(3*(data[d]/100));
          note.start(); 
     }
 }
