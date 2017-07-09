@@ -46,8 +46,10 @@ function extract_data ($short) {
     }
     //get the character
     if ($reader->nodeType == XMLReader::ELEMENT && ($reader->name == 'l' || $reader->name == 'p')) {
-       $playAct[$act][$person[$speaker]['sex']] += 1;
-       $play[$person[$speaker]['sex']] += 1;
+       if ($act > 0 ) {
+         $playAct[$act][$person[$speaker]['sex']] += 1;
+         $play[$person[$speaker]['sex']] += 1;
+       }
     }
   }
   

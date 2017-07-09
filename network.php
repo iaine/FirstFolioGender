@@ -46,7 +46,9 @@ function extract_data ($short) {
     //get the character
     if ($reader->nodeType == XMLReader::ELEMENT && ($reader->name == 'l' || $reader->name == 'p')) {
        $num_items++;
-       $play .= "$act," . map_sex_markup($person[$speaker]['id'], $person[$speaker]['sex']) .','. join(',',$inner)."\n";
+       if ($act > 0) {
+         $play .= "$act," . map_sex_markup($person[$speaker]['id'], $person[$speaker]['sex']) .','. join(',',$inner)."\n";
+       }
        /*if (!$person[$speaker]['sex']) {
           $play .= "$act," . (60 + $person[$speaker]['id']) .','. join(',',$inner)."\n";
        } else if ($person[$speaker]['sex'] == 'M') {
@@ -94,12 +96,11 @@ function extract_data ($short) {
        }
     }
   }
-  $num_items++;
     // We want an array structure for the Act, Spekaer, Who's On stage
     // We need the act for a channel experiment.
     // We need speaker for the main tone
     // We need the speakers as an array for the background sounds and rhythms
-  $play = "$num_items " . substr($play, 0, -1);
+  $play = substr($play, 0, -1);
   $reader->close();
   
   return $play;
